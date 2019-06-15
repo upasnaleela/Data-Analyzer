@@ -1,0 +1,25 @@
+getwd()
+file<-file.choose(new = FALSE)
+readLines(file)
+str(readLines(file)
+paste(readLines(file),collapse=" ")
+text<-paste(readLines(file),collapse=" ")
+text
+text2<-gsub(pattern="\\W",replace=" ",text)
+text2
+text2<-gsub(pattern="\\d",replace=" ",text2)
+text2<-tolower(text2)
+library(tm)
+text2<-removeWords(text2,stopwords())
+text2<-gsub(pattern="\\b[A-z]\\b{1}",replace=" ",text2)
+text2<-stripWhitespace(text2)
+library(stringr)
+library(wordcloud)
+textbag<-str_split(text2,pattern="\\s+")
+textbag<-unlist(textbag)
+ poswords<-scan('positive-words.txt',what='character',comment.char=';')
+ negwords<-scan('negative-words.txt',what='character',comment.char=';')
+ score<-sum(!is.na(match(textbag,poswords)))-sum(!is.na(match(textbag,negwords)))
+ score
+ wordcloud(textbag,min.freq=1,random.order=FALSE,scale=c(3,0.5),color=rainbow(2))
+ 

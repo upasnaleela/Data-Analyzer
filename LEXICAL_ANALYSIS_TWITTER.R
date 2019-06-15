@@ -1,0 +1,35 @@
+score.sentiment=function(sentences,poswords,negwords,.progress='none')
+{
+	require(plyr)
+	require(stringr)
+	list=lapply(sentences,function(sentence,poswords,negwords)
+	{
+		sentence=gsub('[[:punct:]]',' ',sentence)
+		sentence=gsub('[[:cntrl:]]',' ',sentence)
+		sentence=gsub('\\d+','',sentence)#remove decimal number
+		sentence=gsub('\n','',sentence)#remove new line
+		
+		sentence=tolower(sentence)
+		word.list=str_split(sentence,'\\s+')
+		words=unlist(word.list)#change a list to character vector
+		pos.matches=match(words,poswords)
+		neg.matches=match(words,negwords)
+		pos.matches=!is.na(pos.matches)
+		neg.matches=!is.na(neg.matches)
+		pp=sum(pos.matches)
+		nn=sum(neg.matches)
+		score=sum(pos.matches)-sum(neg.matches)
+		list1=c(score,pp,nn)
+		return(list1)
+	},poswords,negwords)
+	score_new=lapply(list,'[[',1)
+	pp1=lapply(list,'[[',2)
+	nn1=lapply(list,'[[',3)
+	scores.df=data.frame(score=score_new,text=sentences)
+	positive.df=data.frame(positive=pp1,text=sentences)
+	negative.df=data.frame(negative=nn1,text=sentences)
+	list_df=list(scores.df,positive.df,negative.df)
+	return(list_df)
+}
+
+		
